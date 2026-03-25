@@ -13,7 +13,7 @@ export default function TaskCard({ task, onEdit, onRequestDelete, onChangeStatus
         </div>
 
         <div
-          className="inline-flex shrink-0 rounded-xl border border-slate-200 bg-slate-50 p-0.5 shadow-inner"
+          className="grid w-full grid-cols-3 gap-1 rounded-xl border border-slate-200 bg-slate-50 p-1 shadow-inner sm:inline-grid sm:w-auto sm:gap-0.5 sm:p-0.5"
           role="group"
           aria-label="Task status"
         >
@@ -25,7 +25,7 @@ export default function TaskCard({ task, onEdit, onRequestDelete, onChangeStatus
                 type="button"
                 aria-pressed={active}
                 onClick={() => onChangeStatus?.(task, status)}
-                className={`rounded-lg px-2 py-1.5 text-[10px] font-semibold leading-tight transition sm:px-2.5 sm:text-xs ${
+                className={`w-full rounded-lg px-1.5 py-1.5 text-[10px] font-semibold leading-tight transition sm:w-auto sm:px-2.5 sm:py-1.5 sm:text-xs ${
                   active ? "text-white shadow-sm" : "text-slate-600 hover:bg-white"
                 }`}
                 style={
@@ -36,11 +36,22 @@ export default function TaskCard({ task, onEdit, onRequestDelete, onChangeStatus
               >
                 {status === "In Progress" ? (
                   <>
-                    <span className="sm:hidden">Progress</span>
+                    <span className="sm:hidden">
+                      <span className="block">In</span>
+                      <span className="block">Progress</span>
+                    </span>
                     <span className="hidden sm:inline">In Progress</span>
                   </>
+                ) : status === "Completed" ? (
+                  <>
+                    <span className="sm:hidden">Completed</span>
+                    <span className="hidden sm:inline">Completed</span>
+                  </>
                 ) : (
-                  status
+                  <>
+                    <span className="sm:hidden">Pending</span>
+                    <span className="hidden sm:inline">Pending</span>
+                  </>
                 )}
               </button>
             );

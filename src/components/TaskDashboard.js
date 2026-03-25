@@ -134,49 +134,58 @@ export default function TaskDashboard({ view }) {
         </div>
       </section>
 
-      <section className="mb-5 grid grid-cols-1 gap-3 rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-sm backdrop-blur md:grid-cols-2">
-        <label className="flex min-w-0 flex-col gap-1.5">
-          <span className="text-sm text-slate-500">Filter</span>
-          <div className="relative">
-            <select
-              className="h-11 w-full cursor-pointer appearance-none rounded-xl border border-slate-200 bg-white px-3 pr-11 text-slate-800 outline-none ring-indigo-100 transition focus:ring-2"
-              value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value)}
-            >
-              <option value="All">All</option>
-              {TASK_STATUSES.map((status) => (
-                <option key={status} value={status}>
-                  {status}
-                </option>
-              ))}
-            </select>
-            <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-slate-500">
-              <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-              </svg>
-            </span>
-          </div>
-        </label>
+      <details className="mb-5 rounded-2xl border border-slate-200 bg-white/80 shadow-sm backdrop-blur">
+        <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-700">
+          <span>Filter &amp; sort</span>
+          <span className="text-xs font-semibold text-slate-500">
+            {filterStatus === "All" ? "All" : filterStatus} · {sortOrder === "asc" ? "Earliest" : "Latest"}
+          </span>
+        </summary>
 
-        <label className="flex min-w-0 flex-col gap-1.5">
-          <span className="text-sm text-slate-500">Sort by Due Date</span>
-          <div className="relative">
-            <select
-              className="h-11 w-full cursor-pointer appearance-none rounded-xl border border-slate-200 bg-white px-3 pr-11 text-slate-800 outline-none ring-indigo-100 transition focus:ring-2"
-              value={sortOrder}
-              onChange={(e) => setSortOrder(e.target.value)}
-            >
-              <option value="asc">Earliest first</option>
-              <option value="desc">Latest first</option>
-            </select>
-            <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-slate-500">
-              <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-              </svg>
-            </span>
-          </div>
-        </label>
-      </section>
+        <div className="grid grid-cols-1 gap-3 border-t border-slate-200 p-4 md:grid-cols-2">
+          <label className="flex min-w-0 flex-col gap-1.5">
+            <span className="text-xs font-semibold text-slate-500">Status</span>
+            <div className="relative">
+              <select
+                className="h-10 w-full cursor-pointer appearance-none rounded-xl border border-slate-200 bg-white px-3 pr-11 text-sm text-slate-800 outline-none ring-indigo-100 transition focus:ring-2"
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value)}
+              >
+                <option value="All">All</option>
+                {TASK_STATUSES.map((status) => (
+                  <option key={status} value={status}>
+                    {status}
+                  </option>
+                ))}
+              </select>
+              <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-slate-500">
+                <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                </svg>
+              </span>
+            </div>
+          </label>
+
+          <label className="flex min-w-0 flex-col gap-1.5">
+            <span className="text-xs font-semibold text-slate-500">Due date</span>
+            <div className="relative">
+              <select
+                className="h-10 w-full cursor-pointer appearance-none rounded-xl border border-slate-200 bg-white px-3 pr-11 text-sm text-slate-800 outline-none ring-indigo-100 transition focus:ring-2"
+                value={sortOrder}
+                onChange={(e) => setSortOrder(e.target.value)}
+              >
+                <option value="asc">Earliest first</option>
+                <option value="desc">Latest first</option>
+              </select>
+              <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-slate-500">
+                <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                </svg>
+              </span>
+            </div>
+          </label>
+        </div>
+      </details>
 
       <section className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {!isHydrated ? (
