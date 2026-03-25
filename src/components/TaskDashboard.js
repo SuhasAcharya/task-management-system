@@ -56,6 +56,12 @@ export default function TaskDashboard({ view }) {
     setIsModalOpen(true);
   };
 
+  const handleChangeStatus = (task, nextStatus) => {
+    if (task.status === nextStatus) return;
+    dispatch(updateTask({ id: task.id, updates: { status: nextStatus } }));
+    toast.success("Status updated");
+  };
+
   const handleSubmit = (payload) => {
     if (editingTask) {
       dispatch(updateTask({ id: editingTask.id, updates: payload }));
@@ -192,6 +198,7 @@ export default function TaskDashboard({ view }) {
               task={task}
               onEdit={openEditModal}
               onRequestDelete={setTaskPendingDelete}
+              onChangeStatus={handleChangeStatus}
             />
           ))
         )}
