@@ -22,6 +22,14 @@ export default function TaskDashboard({ view }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
   const [taskPendingDelete, setTaskPendingDelete] = useState(null);
+  const [name, setName] = useState('asc')
+
+  const [query, setQuery] = useState('')
+  const [debouncedQuery, setDebouncedQuery] = useState('')
+
+  const [update, setUpdate] = useState([])
+
+
 
   useEffect(() => {
     const storedTasks = loadTasksFromStorage();
@@ -35,16 +43,47 @@ export default function TaskDashboard({ view }) {
   }, [tasks, isHydrated]);
 
   const visibleTasks = useMemo(() => {
+
+
     let result = [...tasks];
+
+
     if (view === "completed") result = result.filter((task) => task.status === "Completed");
     if (filterStatus !== "All") result = result.filter((task) => task.status === filterStatus);
+
+
+    if (name === 'asc') {
+      result = [...result].sort((a, b) => a.title.localeCompare(b.title))
+    } else {
+      result = [...result].sort((a, b) => b.title.localeCompare(a.title))
+    }
+
+
     result.sort((a, b) => {
       const aTime = new Date(a.dueDate).getTime();
       const bTime = new Date(b.dueDate).getTime();
       return sortOrder === "asc" ? aTime - bTime : bTime - aTime;
     });
+
+
+
+
     return result;
-  }, [tasks, view, filterStatus, sortOrder]);
+  }, [tasks, view, filterStatus, sortOrder, name]);
+
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const filter = tasks.filter(item => item.title.includes(debouncedQuery))
+      setDebouncedQuery(query)
+      setUpdate(filter)
+    }, 2000);
+    return () => clearTimeout(timer);
+
+  }, [query, update])
+
+
+
 
   const openCreateModal = () => {
     setEditingTask(null);
@@ -103,8 +142,8 @@ export default function TaskDashboard({ view }) {
             <Link
               href="/"
               className={`rounded-lg px-3.5 py-2 text-sm font-semibold transition ${view === "all"
-                  ? "cursor-pointer bg-indigo-600 text-white"
-                  : "cursor-pointer text-slate-600 hover:bg-slate-50 hover:text-slate-800"
+                ? "cursor-pointer bg-indigo-600 text-white"
+                : "cursor-pointer text-slate-600 hover:bg-slate-50 hover:text-slate-800"
                 }`}
             >
               All Tasks
@@ -112,8 +151,8 @@ export default function TaskDashboard({ view }) {
             <Link
               href="/completed"
               className={`rounded-lg px-3.5 py-2 text-sm font-semibold transition ${view === "completed"
-                  ? "cursor-pointer bg-indigo-600 text-white"
-                  : "cursor-pointer text-slate-600 hover:bg-slate-50 hover:text-slate-800"
+                ? "cursor-pointer bg-indigo-600 text-white"
+                : "cursor-pointer text-slate-600 hover:bg-slate-50 hover:text-slate-800"
                 }`}
             >
               Completed Tasks
@@ -184,6 +223,34 @@ export default function TaskDashboard({ view }) {
               </span>
             </div>
           </label>
+
+          <label className="flex min-w-0 flex-col gap-1.5">
+            <span className="text-xs font-semibold text-slate-500">Name</span>
+            <div className="relative">
+              <select
+                className="h-10 w-full cursor-pointer appearance-none rounded-xl border border-slate-200 bg-white px-3 pr-11 text-sm text-slate-800 outline-none ring-indigo-100 transition focus:ring-2"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              >
+                <option value="asc">Asc</option>
+                <option value="desc">Desc</option>
+              </select>
+              <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-slate-500">
+                <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                </svg>
+              </span>
+            </div>
+          </label>
+          <label className="flex min-w-0 flex-col gap-1.5">
+            <span className="text-xs font-semibold text-slate-500">Name</span>
+            <div className="relative">
+              <input type="text" value={query} onChange={(e) => setQuery(e.target.value)} ></input>
+            </div>
+          </label>
+
+
+
         </div>
       </details>
 
@@ -201,7 +268,7 @@ export default function TaskDashboard({ view }) {
             {emptyText}
           </div>
         ) : (
-          visibleTasks.map((task) => (
+          update.map((task) => (
             <TaskCard
               key={task.id}
               task={task}

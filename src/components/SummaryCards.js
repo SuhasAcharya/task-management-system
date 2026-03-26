@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { TASK_STATUSES } from "@/lib/constants";
 
 export default function SummaryCards({ tasks }) {
+
   const counts = useMemo(() => {
     const summary = {
       total: tasks.length,
